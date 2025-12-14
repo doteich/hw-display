@@ -11,6 +11,40 @@ The project consists of three main parts:
 
 The Windows service periodically sends hardware data to the Python app's API endpoint. The Python app then cycles through this data on the OLED screen. If the host PC goes offline, the display enters a sleep mode and wakes up as soon as it receives new data.
 
+The tutorial will guide you, how to set everything up on a windows machine
+
+## Setting up the Raspberry Pi
+
+### Hardware & Software Requirements
+#### Hardware
+* SSD1322 Display
+* Raspberry Pi Zero 2W(H)
+* 7 Jumper Wires
+* Soldering Iron for changing the Display interface mode
+* SD Card
+
+#### Software
+* [Balena Etcher](https://etcher.balena.io/) for flashing the SD card with the os
+* Docker for testing and bootstrapping the RPi
+
+### Hardware Wiring and Display Setup
+
+* Follow the [Guide](https://github.com/chrisys/train-departure-display/blob/main/docs/02-connecting-the-display-to-the-pi.md) here. Creds [chrisys](https://github.com/chrisys) for this awesome write up.
+* Make sure that the 4-SPI interface is active on the display. It required some soldering on my side
+* As I have Raspberry 2WH, the rest of the connection can be done via female-2-female jumper wires 
+
+
+### Optional: Setting up DietPi
+* Create a bootable SD card with Balena Etcher
+* Change the Dietpi `dietpi.txt` on the SD card so that a headless, auto start is possible. 
+
+
+### Bootstrapping
+
+1. Build the Docker image inside the root folder
+2. Add **SSH_HOST**, **SSH_USER** und **SSH_PASS** as args and start the container to connect from docker to the running raspberry pi to copy over the files, install dependencies and create the systemd config
+
+
 ## Building and Running the Windows Service
 
 The `hardware-service` is a .NET Worker Service that collects and forwards hardware data from your Windows PC.
@@ -41,32 +75,6 @@ The `hardware-service` is a .NET Worker Service that collects and forwards hardw
     ```sh
     sc start HardwareMonitorService
     ```
-
-## Setting up the Raspberry Pi
-
-The `app` directory contains the Python code for the Raspberry Pi.
-
-### Hardware Prerequisites
-
-*   Raspberry Pi (tested with Zero 2W).
-*   A SSD1322-based OLED display (256x64 pixels).
-*   Correct wiring between the Pi's GPIO headers and the display.
-
-### Software Setup
-
-1.  **Install Python**: Ensure you have Python 3 installed on your Raspberry Pi.
-2.  **Enable SPI**: Use `sudo raspi-config` to enable the SPI interface under `Interface Options`.
-3.  **Install Dependencies**: Navigate to the `app` directory and install the required Python packages:
-    ```sh
-    pip3 install -r requirements.txt
-    ```
-4.  **Run the Application**: Start the main application:
-    ```sh
-    python3 main.py
-    ```
-    The script will start the web server and initialize the display.
-
-For long-term use, it is recommended to set up a `systemd` service on the Pi to automatically run the script on boot.
 
 ## 3D Printed Case
 

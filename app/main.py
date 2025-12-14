@@ -8,7 +8,7 @@ import shared
 from config import loadConfig
 from webserver import run_flask_server
 
-# import RPi.GPIO as GPIO
+
 
 from luma.core.interface.serial import spi, noop
 from luma.core.render import canvas
@@ -184,13 +184,14 @@ def drawCPUScreen(device, width, height):
 try:
 
     config = loadConfig()
-    config["headless"] = True
-    if config['headless']:
+
+    if config['debug']:
         print('Running in Emulator mode (Local Dev)')
         from luma.emulator.device import pygame
         # This creates a popup window on your PC simulating the 256x64 screen
         device = pygame(width=256, height=64, mode="1", transform="scale2x")
     else:
+        import RPi.GPIO as GPIO
         GPIO.setwarnings(False)
         serial = spi(port=0)
         device = ssd1322(serial, mode="1", rotate=0)
@@ -206,7 +207,7 @@ try:
     pauseCount = 0
     loop_count = 0
 
-    regulator = framerate_regulator(config['targetFPS'])
+    regulator = framerate_regulator(16.67)
 
     server_thread = threading.Thread(target=run_flask_server)
 
