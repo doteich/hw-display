@@ -224,7 +224,7 @@ try:
     while True:
         delta = datetime.now() - shared.last_update
         print(delta.seconds)
-        if delta.seconds > 20:
+        if delta.seconds > 120:
             print(f"received last update over {delta.seconds}s ago")
             if display_off == False:
                 display_off = True

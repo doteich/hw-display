@@ -1,0 +1,11 @@
+[Unit]
+Description=RPI Display Service
+After=network.target
+StartLimitIntervalSec=0
+
+[Service]
+Type=simple
+Restart=always
+RestartSec=1
+User=root
+ExecStart=/usr/bin/env python3 /home/root/hw_display/app/main.py
